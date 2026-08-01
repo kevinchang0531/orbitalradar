@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FORMOSAT-8A 即時軌道資料與近接風險監控。">
+  <title>軌道雷達｜FORMOSAT-8A 監控</title>
+  <style>
+    :root{--bg:#07111f;--panel:#0d1d31;--line:#ffffff1b;--ink:#eef7ff;--muted:#9db0c6;--cyan:#43d8ff;--mint:#7af0c8;--amber:#ffc95e}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#173b60 0,transparent 38%),var(--bg);color:var(--ink);font-family:Arial,"Microsoft JhengHei",sans-serif}.shell{max-width:1160px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:0 0 22px}.brand{font-weight:800;letter-spacing:.05em}.brand b{color:var(--cyan);font-size:27px;margin-right:8px}.source{font-size:12px;color:var(--mint)}.hero{padding:72px 0 42px;display:grid;grid-template-columns:1.2fr .8fr;gap:40px}.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--cyan);font-weight:800}.eyebrow:before{content:"●";color:var(--mint);margin-right:8px}h1{font-size:clamp(43px,6vw,76px);margin:16px 0;line-height:1;letter-spacing:-.06em}h1 span{color:var(--cyan)}.lead{max-width:590px;color:#b2c3d7;line-height:1.8}.earth{aspect-ratio:1;border:1px solid #54cdf966;border-radius:50%;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#55cfff,#175083 43%,#07182c 68%);box-shadow:inset -25px -22px 45px #031222,0 0 65px #1cb6e155}.earth:before,.earth:after{content:"";position:absolute;border:1px solid #8bdbff77;border-radius:50%}.earth:before{inset:-13% 9%;transform:rotate(48deg)}.earth:after{inset:8% -16%;transform:rotate(-22deg)}.earth span{font-size:12px;letter-spacing:.12em}.sat{position:absolute;top:8%;right:25%;color:#fff;text-shadow:0 0 15px var(--cyan);font-size:21px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat,.card{background:linear-gradient(150deg,#10243b,#091728);border:1px solid var(--line);border-radius:12px}.stat{padding:20px}.stat span,.label{display:block;font-size:11px;color:var(--muted)}.stat strong{display:block;font-size:28px;margin-top:8px}.section{margin-top:50px}.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:17px}.section h2{margin:8px 0 0;font-size:29px}.grid{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}.card{padding:24px}.sat-name{display:flex;justify-content:space-between;align-items:start}.sat-name h3{margin:0;font-size:25px}.pill{color:var(--mint);font-size:11px}.pill:before{content:"● ";font-size:8px}.values{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:28px 0}.value b{display:block;font-size:20px;margin-top:5px}.updated{border-top:1px solid var(--line);padding-top:16px;color:var(--muted);font-size:12px;line-height:1.7}.updated a{color:var(--cyan);text-decoration:none}.warning{background:linear-gradient(150deg,#2c2b1c,#161b22);border-color:#ffc95e55}.warning h3{margin:9px 0;font-size:23px}.warning p{color:#d2c9a4;line-height:1.65;font-size:13px}.list{padding:0;overflow:hidden}.event{display:flex;gap:14px;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line)}.event:last-child{border:0}.dot{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 12px var(--mint)}.dot.warn{background:var(--amber);box-shadow:0 0 12px var(--amber)}.event b,.event small{display:block}.event small{color:var(--muted);font-size:11px;margin-top:5px}footer{display:flex;justify-content:space-between;color:#74879e;font-size:11px;border-top:1px solid var(--line);padding:26px 0;margin-top:54px}@media(max-width:760px){.hero,.grid{grid-template-columns:1fr}.earth{max-width:360px;margin:auto}.stats{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start;gap:15px;flex-direction:column}footer{flex-direction:column;gap:8px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top"><div class="brand"><b>◌</b>軌道雷達　<small>ORBITAL RADAR</small></div><div class="source">● CelesTrak 官方 GP 資料</div></header>
+    <section class="hero"><div><p class="eyebrow">FORMOSAT-8A · NORAD 66666</p><h1>軌道資料<br><span>持續監控</span></h1><p class="lead">以公開、受規範的軌道元素資料呈現福衛八號第一顆衛星的最新編目資訊。此頁每次資料更新後自動由 GitHub Pages 發布。</p></div><div class="earth"><span>地球軌道</span><i class="sat">✦</i></div></section>
+    <section class="stats"><article class="stat"><span>衛星狀態</span><strong>正常</strong></article><article class="stat"><span>軌道傾角</span><strong id="inclination">—</strong></article><article class="stat"><span>軌道週期</span><strong id="period">—</strong></article><article class="stat"><span>資料更新</span><strong id="freshness">—</strong></article></section>
+    <section class="section"><div class="section-head"><div><p class="eyebrow">LIVE GP RECORD</p><h2>FORMOSAT-8A 軌道元素</h2></div></div><div class="grid"><article class="card"><div class="sat-name"><div><h3>FORMOSAT-8A</h3><span class="label">NORAD 66666 · Sun-synchronous orbit</span></div><span class="pill">資料有效</span></div><div class="values"><div class="value"><span class="label">TLE／OMM Epoch</span><b id="epoch">載入中…</b></div><div class="value"><span class="label">平均運動</span><b id="mean-motion">—</b></div><div class="value"><span class="label">軌道傾角</span><b id="detail-inclination">—</b></div><div class="value"><span class="label">偏心率</span><b id="eccentricity">—</b></div></div><div class="updated" id="updated">正在取得 CelesTrak 資料…</div></article><aside class="card warning"><p class="eyebrow">資料使用提醒</p><h3>近接風險需授權資料</h3><p>GP／TLE 用於軌道預測，不能單獨作為碰撞避免決策。本頁不將展示資料視為碰撞警報。</p><p>如需高可信度 conjunction 資訊，請使用具授權的資料服務。</p></aside></div></section>
+    <section class="section"><div class="section-head"><div><p class="eyebrow">MONITOR</p><h2>監控範圍</h2></div></div><div class="card list"><div class="event"><span class="dot"></span><span><b>官方 GP 軌道元素</b><small>每兩小時依 CelesTrak 使用規範檢查更新</small></span></div><div class="event"><span class="dot warn"></span><span><b>近接／碰撞事件</b><small>需額外授權的 conjunction 資料來源才能提供</small></span></div></div></section>
+    <footer><span>資料：CelesTrak GP Data · NORAD 66666</span><span>GitHub Pages 自動發布</span></footer>
+  </main>
+  <script>
+    async function load() {
+      const response = await fetch(`data/formosat-8a.json?v=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error("資料檔無法讀取");
+      const data = await response.json();
+      const updated = new Date(data.refreshedAt);
+      document.querySelector('#inclination').textContent = `${data.inclinationDeg.toFixed(2)}°`;
+      document.querySelector('#period').textContent = `${data.periodMinutes.toFixed(2)} 分`;
+      document.querySelector('#freshness').textContent = updated.toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' });
+      document.querySelector('#epoch').textContent = new Date(data.epoch).toLocaleString('zh-TW', { hour12: false });
+      document.querySelector('#mean-motion').textContent = `${data.meanMotionRevPerDay.toFixed(6)} rev/day`;
+      document.querySelector('#detail-inclination').textContent = `${data.inclinationDeg.toFixed(4)}°`;
+      document.querySelector('#eccentricity').textContent = data.eccentricity.toFixed(7);
+      document.querySelector('#updated').innerHTML = `最後檢查：${updated.toLocaleString('zh-TW', { hour12: false })}<br>來源：<a href="${data.sourceUrl}" target="_blank" rel="noreferrer">${data.source}</a>`;
+    }
+    load().catch((error) => { document.querySelector('#updated').textContent = `資料暫時無法載入：${error.message}`; });
+  </script>
+</body>
+</html>
