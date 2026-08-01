@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const objects = [
   { name: "FORMOSAT-8A", id: "NORAD 66666", type: "光學遙測", orbit: "SSO · 565 km", status: "正常", risk: "低" },
@@ -15,12 +15,36 @@ const events = [
   { time: "08/02 11:05 UTC", pair: "ONEWEB-0050 × COSMOS DEB", distance: "1.7 km", level: "高風險", tone: "danger" },
 ];
 
+type LiveFormosat = {
+  epoch: string;
+  inclinationDeg: number;
+  meanMotionRevPerDay: number;
+  periodMinutes: number;
+  refreshedAt: string;
+  source: string;
+  sourceUrl: string;
+};
+
+const liveDataUrl =
+  "https://raw.githubusercontent.com/kevinchang0531/orbitalradar/main/public/data/formosat-8a.json";
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState("總覽");
   const [watching, setWatching] = useState(false);
   const [notice, setNotice] = useState("尚未啟用");
   const [query, setQuery] = useState("");
   const [orbit, setOrbit] = useState("全部軌道");
+  const [liveFormosat, setLiveFormosat] = useState<LiveFormosat | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const cacheKey = Math.floor(Date.now() / 300000);
+    fetch(`${liveDataUrl}?v=${cacheKey}`, { cache: "no-store", signal: controller.signal })
+      .then((response) => (response.ok ? response.json() : Promise.reject(response)))
+      .then((data: LiveFormosat) => setLiveFormosat(data))
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, []);
 
   const filtered = useMemo(() =>
     objects.filter((item) =>
@@ -86,7 +110,9 @@ export default function Home() {
           {filtered.map((item) => <article className="object-card" key={item.id}>
             <div className="object-top"><span className="object-symbol">◉</span><span className={`status ${item.status === "機動中" ? "amber" : ""}`}>{item.status}</span></div>
             <h3>{item.name}</h3><p>{item.id}</p>
-            <dl><div><dt>任務類型</dt><dd>{item.type}</dd></div><div><dt>軌道</dt><dd>{item.orbit}</dd></div></dl>
+            {item.id === "NORAD 66666" && liveFormosat && <p className="data-stamp">GP 資料：{new Date(liveFormosat.refreshedAt).toLocaleString("zh-TW", { hour12: false })}</p>}
+            <dl><div><dt>任務類型</dt><dd>{item.type}</dd></div><div><dt>軌道</dt><dd>{item.id === "NORAD 66666" && liveFormosat ? `傾角 ${liveFormosat.inclinationDeg.toFixed(2)}°` : item.orbit}</dd></div></dl>
+            {item.id === "NORAD 66666" && liveFormosat && <div className="live-orbit">週期 {liveFormosat.periodMinutes.toFixed(2)} 分 · {liveFormosat.meanMotionRevPerDay.toFixed(4)} rev/day<br /><a href={liveFormosat.sourceUrl} target="_blank" rel="noreferrer">來源：{liveFormosat.source}</a></div>}
             <button className="card-link" onClick={() => item.id === "NORAD 66666" && setWatching(true)}>開啟詳細資料 <span>→</span></button>
           </article>)}
         </div>
