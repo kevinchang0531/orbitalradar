@@ -1,12 +1,12 @@
 {
   "name": "FORMOSAT-8A",
   "noradId": "66666",
-  "epoch": "2026-08-25T05:05:50.364672",
+  "epoch": "2026-08-25T05:05:50.363808",
   "inclinationDeg": 97.6548,
-  "eccentricity": 0.00077297,
+  "eccentricity": 0.000773,
   "meanMotionRevPerDay": 15.00988514,
   "periodMinutes": 95.94,
   "source": "CelesTrak GP Data",
   "sourceUrl": "https://celestrak.org/NORAD/elements/gp.php?CATNR=66666&FORMAT=JSON",
-  "refreshedAt": "2026-08-25T13:10:23.855Z"
+  "refreshedAt": "2026-08-25T18:55:49.317Z"
 }
