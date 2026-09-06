@@ -134,18 +134,39 @@
     summary { cursor: pointer; color: var(--cyan); font-weight: 800; }
     footer { padding: 45px 0 70px; color: var(--muted); font-size: .8rem; }
     .source-note { border-left: 3px solid var(--pink); padding-left: 15px; }
+    .improve-grid { grid-template-columns: repeat(3, 1fr); }
+    .improve-card { min-height: 190px; }
+    .improve-index { color: var(--pink); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-weight: 900; font-size: .82rem; }
+    .improve-card h3 { margin-top: 9px; }
+    .improve-card p { color: var(--muted); font-size: .86rem; }
+    .guardrail { border: 1px solid rgba(255,179,78,.42); background: linear-gradient(145deg, rgba(91,58,22,.28), rgba(7,18,32,.78)); }
+    .guardrail strong { color: var(--orange); }
+    .loop { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; align-items: stretch; }
+    .loop-step { position: relative; min-height: 112px; display: grid; align-content: center; padding: 13px 12px; border: 1px solid rgba(72,215,232,.35); border-radius: 14px; background: rgba(16,37,63,.72); text-align: center; }
+    .loop-step:not(:last-child)::after { content: "→"; position: absolute; right: -15px; top: 42px; z-index: 2; color: var(--pink); font-size: 1.25rem; }
+    .loop-step b { display: block; font-size: .88rem; }
+    .loop-step span { display: block; margin-top: 5px; color: var(--muted); font-size: .72rem; line-height: 1.4; }
+    .loop-step.decision { border-color: rgba(240,76,189,.7); }
+    .loop-step.verify { border-color: rgba(96,224,162,.65); }
+    .compare { grid-template-columns: 1fr 1fr; }
+    .compare ul { margin: 10px 0 0; padding-left: 1.25rem; color: var(--muted); }
+    .compare li + li { margin-top: 7px; }
 
     @media (max-width: 850px) {
       .hero { grid-template-columns: 1fr; }
       .orbit-card { min-height: 280px; }
-      .metrics, .assessments, .actions { grid-template-columns: 1fr 1fr; }
+      .metrics, .assessments, .actions, .improve-grid, .compare { grid-template-columns: 1fr 1fr; }
+      .loop { grid-template-columns: repeat(3, 1fr); }
+      .loop-step:nth-child(3)::after { display: none; }
       .section-head { display: block; }
     }
     @media (max-width: 560px) {
       .wrap { width: min(100% - 26px, 1180px); }
       header { min-height: auto; padding-top: 54px; }
       section { padding: 62px 0; }
-      .metrics, .assessments, .actions { grid-template-columns: 1fr; }
+      .metrics, .assessments, .actions, .improve-grid, .compare { grid-template-columns: 1fr; }
+      .loop { grid-template-columns: 1fr; }
+      .loop-step:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -19px; }
       .time-row { grid-template-columns: 32px 88px 1fr; gap: 10px; font-size: .9rem; }
       .timeline::before { left: 15px; }
       .time-dot { margin-left: 9px; }
@@ -262,10 +283,39 @@
       </div>
     </section>
 
+    <section id="improvement">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">04 / PROCESS IMPROVEMENT</div><h2>從 Starlink 流程借鏡，補上三個閉環</h2></div>
+          <span class="pill">設計參考，不直接搬用 Starlink 參數</span>
+        </div>
+        <div class="grid improve-grid">
+          <article class="card improve-card"><div class="improve-index">01 / INPUT</div><h3>多源資料與版本化事件</h3><p>把 18 SDS CDM、任務星歷、自有追蹤與獨立來源放進同一事件 ID；每次更新保留 TCA、Pc、協方差與來源時間，不只看最新一封通知。</p></article>
+          <article class="card improve-card"><div class="improve-index">02 / DECISION</div><h3>滾動重評＋人工閘門</h3><p>借鏡 T−72h、T−48h、T−24h、T−6h 的滾動窗口；計算可自動化，但是否進行 CAM 必須保留 OD/PM 的明確決策與責任人。</p></article>
+          <article class="card improve-card"><div class="improve-index">03 / CLOSED LOOP</div><h3>執行後重新證明安全</h3><p>CAM 前先做全域衝突檢查；指令上傳需有回執，機動後重新取得星歷／CDM、重算 Pc，再把結果回寫事件紀錄。</p></article>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="eyebrow">PROPOSED OPERATING LOOP</div>
+          <div class="loop" style="margin-top:14px">
+            <div class="loop-step"><b>多源攝取</b><span>CDM／星歷／追蹤資料</span></div>
+            <div class="loop-step"><b>事件建檔</b><span>同一事件 ID、版本與時間</span></div>
+            <div class="loop-step decision"><b>風險重評</b><span>TCA、Pc、協方差、miss distance</span></div>
+            <div class="loop-step decision"><b>OD／PM 閘門</b><span>CAM、No Action 或持續監控</span></div>
+            <div class="loop-step"><b>全域檢查</b><span>確認機動不產生新衝突</span></div>
+            <div class="loop-step verify"><b>執行後驗證</b><span>回執、更新 CDM、重算 Pc</span></div>
+          </div>
+        </div>
+        <div class="grid compare" style="margin-top:16px">
+          <article class="card"><h3>目前 SOP 已有</h3><ul><li>Pc threshold 判斷與 No Action 分流</li><li>TCA−14h／−12h／−5h 的 CAM 時序</li><li>Payload OFF／ON 與 Delta-V Burn Load</li></ul></article>
+          <article class="card guardrail"><h3><strong>建議新增的控制點</strong></h3><ul><li>每筆通知的事件版本、來源與責任人</li><li>CAM 前的全域衝突檢查與指令回執</li><li>CAM 後的星歷更新、Pc 重算與結案條件</li></ul></article>
+        </div>
+        <p class="source-note muted">移植界線：Starlink 頁面的 3×10⁻⁷ 是其研究頁所述的 Starlink 參數，不能取代本任務 SOP 的 Pc ≥ 0.0002；Starlink 的自動化與感測器數字也只能作流程設計參考，不能視為 FORMOSAT-8A 的既定能力。</p>
+      </div>
+    </section>
     <section id="assessments">
       <div class="wrap">
         <div class="section-head">
-          <div><div class="eyebrow">04 / NOTIFICATION UPDATES</div><h2>4 筆通知，整理成同一張事件卡</h2></div>
+          <div><div class="eyebrow">05 / NOTIFICATION UPDATES</div><h2>4 筆通知，整理成同一張事件卡</h2></div>
           <span class="pill">FORMOSAT-8A × ELECTRON KICK STAGE R/B</span>
         </div>
         <div class="grid assessments">
@@ -280,7 +330,7 @@
     <section id="actions">
       <div class="wrap">
         <div class="section-head">
-          <div><div class="eyebrow">05 / OPERATOR CHECKLIST</div><h2>通知收到後，先做這四件事</h2></div>
+          <div><div class="eyebrow">06 / OPERATOR CHECKLIST</div><h2>通知收到後，先做這四件事</h2></div>
           <span class="pill">原通知中的可執行事項</span>
         </div>
         <div class="grid actions">
