@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FORMOSAT-8A Close Approach｜避險執行流程</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --panel: rgba(12, 28, 49, .86);
+      --panel-2: rgba(16, 37, 63, .76);
+      --ink: #eaf4ff;
+      --muted: #9db4ca;
+      --line: #294b6d;
+      --cyan: #48d7e8;
+      --blue: #6f8cff;
+      --pink: #f04cbd;
+      --orange: #ffb34e;
+      --danger: #ff6b79;
+      --ok: #60e0a2;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .28);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 82% 8%, rgba(84, 122, 255, .18), transparent 28rem),
+        radial-gradient(circle at 12% 40%, rgba(240, 76, 189, .08), transparent 24rem),
+        linear-gradient(135deg, #050c17 0%, var(--bg) 55%, #091829 100%);
+      font-family: "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+      line-height: 1.65;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .34;
+      background-image: radial-gradient(#c8e7ff 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: linear-gradient(to bottom, black, transparent 70%);
+    }
+
+    a { color: var(--cyan); }
+    .wrap { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .eyebrow { color: var(--cyan); letter-spacing: .14em; text-transform: uppercase; font-size: .75rem; font-weight: 800; }
+    .muted { color: var(--muted); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .pill { display: inline-flex; align-items: center; gap: .4rem; border: 1px solid rgba(72,215,232,.34); border-radius: 999px; padding: .28rem .7rem; color: #bdeff5; font-size: .78rem; background: rgba(72,215,232,.09); }
+
+    header { min-height: 92vh; display: grid; align-items: center; padding: 82px 0 72px; }
+    .hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
+    h1 { max-width: 780px; margin: 12px 0 18px; font-size: clamp(2.8rem, 7vw, 6.8rem); line-height: .98; letter-spacing: -.055em; }
+    .hero h1 span { color: var(--pink); }
+    .lead { max-width: 680px; color: #c5d7e9; font-size: clamp(1.05rem, 2vw, 1.3rem); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+    .button { display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; padding: .75rem 1rem; text-decoration: none; font-weight: 800; border: 1px solid var(--line); color: var(--ink); background: rgba(255,255,255,.05); }
+    .button.primary { color: #06111d; border-color: transparent; background: linear-gradient(135deg, var(--cyan), #83f0e2); }
+
+    .orbit-card { position: relative; min-height: 390px; overflow: hidden; border: 1px solid rgba(111,140,255,.38); border-radius: 26px; background: radial-gradient(circle at 65% 38%, rgba(111,140,255,.36), transparent 13rem), linear-gradient(145deg, rgba(20,47,80,.9), rgba(5,15,29,.9)); box-shadow: var(--shadow); }
+    .orbit-card::before, .orbit-card::after { content: ""; position: absolute; border: 1px solid rgba(72,215,232,.35); border-radius: 50%; transform: rotate(-17deg); }
+    .orbit-card::before { width: 500px; height: 180px; left: -58px; top: 102px; }
+    .orbit-card::after { width: 440px; height: 138px; left: -10px; top: 142px; border-color: rgba(240,76,189,.4); }
+    .sat { position: absolute; left: 48%; top: 42%; width: 82px; height: 24px; transform: rotate(-17deg); border: 2px solid var(--cyan); border-radius: 4px; box-shadow: 0 0 24px rgba(72,215,232,.8); }
+    .sat::before, .sat::after { content: ""; position: absolute; top: 4px; width: 30px; height: 12px; background: var(--pink); }
+    .sat::before { right: 100%; margin-right: 8px; }
+    .sat::after { left: 100%; margin-left: 8px; }
+    .dot { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: var(--orange); box-shadow: 0 0 0 7px rgba(255,179,78,.13), 0 0 22px var(--orange); }
+    .dot.a { left: 22%; top: 28%; } .dot.b { right: 15%; bottom: 24%; }
+    .orbit-label { position: absolute; bottom: 24px; left: 24px; right: 24px; display: flex; justify-content: space-between; gap: 12px; color: #a9c2dd; font-size: .82rem; }
+
+    section { padding: 90px 0; position: relative; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 30px; }
+    h2 { margin: 8px 0 0; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.05; letter-spacing: -.04em; }
+    h3 { margin: 0 0 7px; }
+    .grid { display: grid; gap: 16px; }
+    .metrics { grid-template-columns: repeat(4, 1fr); }
+    .card { border: 1px solid rgba(157,180,202,.18); border-radius: 18px; padding: 22px; background: linear-gradient(145deg, var(--panel), rgba(7,18,32,.78)); box-shadow: var(--shadow); }
+    .metric .label { color: var(--muted); font-size: .82rem; }
+    .metric .value { margin-top: 6px; font-size: clamp(1.35rem, 2.4vw, 2.05rem); font-weight: 900; letter-spacing: -.035em; }
+    .metric .sub { margin-top: 4px; color: var(--muted); font-size: .78rem; }
+    .pink { color: var(--pink); } .orange { color: var(--orange); } .cyan { color: var(--cyan); } .green { color: var(--ok); }
+
+    .flow-board { overflow: auto; padding: 22px; border: 1px solid rgba(72,215,232,.2); border-radius: 22px; background: rgba(3,12,24,.72); }
+    .flow { min-width: 880px; display: grid; grid-template-columns: 1.1fr .28fr 1.1fr .28fr 1.1fr; align-items: center; gap: 12px; }
+    .flow-col { display: grid; gap: 12px; }
+    .node { position: relative; min-height: 66px; display: grid; align-content: center; border: 1px solid var(--line); border-radius: 12px; padding: 10px 13px; background: var(--panel-2); text-align: center; font-size: .9rem; }
+    .node strong { display: block; color: #fff; font-size: .95rem; }
+    .node small { display: block; color: var(--muted); font-size: .74rem; }
+    .node.start { border-color: rgba(72,215,232,.7); background: linear-gradient(145deg, rgba(30,81,106,.82), var(--panel-2)); }
+    .node.decision { border-color: rgba(240,76,189,.72); border-radius: 50%; min-height: 88px; padding: 8px 20px; background: radial-gradient(circle, rgba(240,76,189,.16), var(--panel-2)); }
+    .node.action { border-color: rgba(255,179,78,.62); }
+    .node.end { border-color: rgba(255,107,121,.62); }
+    .arrow { display: grid; place-items: center; color: var(--cyan); font-size: 1.6rem; }
+    .arrow small { color: var(--muted); font-size: .68rem; text-align: center; line-height: 1.2; }
+    .branch { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center; }
+    .branch-label { grid-column: 1 / -1; color: var(--muted); text-align: center; font-size: .75rem; }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-top: 18px; color: var(--muted); font-size: .78rem; }
+    .legend span::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 6px; border-radius: 50%; background: var(--cyan); }
+    .legend .warn::before { background: var(--orange); } .legend .stop::before { background: var(--danger); } .legend .decision::before { background: var(--pink); }
+
+    .timeline { position: relative; display: grid; gap: 14px; }
+    .timeline::before { content: ""; position: absolute; left: 20px; top: 23px; bottom: 23px; width: 1px; background: linear-gradient(var(--cyan), var(--pink), var(--orange)); }
+    .time-row { position: relative; display: grid; grid-template-columns: 42px 130px 1fr; gap: 18px; align-items: start; }
+    .time-dot { z-index: 1; width: 13px; height: 13px; margin: 8px 0 0 14px; border: 3px solid var(--bg); border-radius: 50%; background: var(--cyan); box-shadow: 0 0 0 1px var(--cyan); }
+    .time-label { padding-top: 2px; color: var(--cyan); font-weight: 900; }
+    .time-content { min-height: 54px; }
+    .time-content strong { display: block; margin-bottom: 3px; }
+    .time-content span { color: var(--muted); font-size: .84rem; }
+
+    .assessments { grid-template-columns: repeat(2, 1fr); }
+    .assessment { position: relative; overflow: hidden; }
+    .assessment::after { content: ""; position: absolute; right: -28px; top: -28px; width: 100px; height: 100px; border: 1px solid rgba(240,76,189,.25); border-radius: 50%; }
+    .assessment-head { display: flex; justify-content: space-between; gap: 16px; align-items: start; }
+    .assessment h3 { font-size: 1.05rem; }
+    .pc { color: var(--pink); font-size: 1.3rem; font-weight: 900; }
+    .data-table { width: 100%; margin-top: 18px; border-collapse: collapse; font-size: .82rem; }
+    .data-table th, .data-table td { padding: 7px 0; border-bottom: 1px solid rgba(157,180,202,.13); text-align: left; }
+    .data-table th { color: var(--muted); font-weight: 500; }
+    .data-table td { text-align: right; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .cdm { margin-top: 14px; font-size: .74rem; color: var(--muted); word-break: break-all; }
+
+    .actions { grid-template-columns: repeat(2, 1fr); }
+    .action-card { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+    .action-no { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; color: #07111f; background: var(--cyan); font-weight: 900; }
+    .action-card:nth-child(2) .action-no { background: var(--pink); }
+    .action-card:nth-child(3) .action-no { background: var(--orange); }
+    .action-card:nth-child(4) .action-no { background: var(--ok); }
+    details { border-top: 1px solid rgba(157,180,202,.16); padding-top: 16px; }
+    summary { cursor: pointer; color: var(--cyan); font-weight: 800; }
+    footer { padding: 45px 0 70px; color: var(--muted); font-size: .8rem; }
+    .source-note { border-left: 3px solid var(--pink); padding-left: 15px; }
+
+    @media (max-width: 850px) {
+      .hero { grid-template-columns: 1fr; }
+      .orbit-card { min-height: 280px; }
+      .metrics, .assessments, .actions { grid-template-columns: 1fr 1fr; }
+      .section-head { display: block; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(100% - 26px, 1180px); }
+      header { min-height: auto; padding-top: 54px; }
+      section { padding: 62px 0; }
+      .metrics, .assessments, .actions { grid-template-columns: 1fr; }
+      .time-row { grid-template-columns: 32px 88px 1fr; gap: 10px; font-size: .9rem; }
+      .timeline::before { left: 15px; }
+      .time-dot { margin-left: 9px; }
+    }
+  </style>
+</head>
+<body>
+  <header id="top">
+    <div class="wrap hero">
+      <div>
+        <div class="eyebrow">FORMOSAT-8A / CONJUNCTION ASSESSMENT</div>
+        <h1>把接近事件，<span>變成可執行的避險流程。</span></h1>
+        <p class="lead">依照 SOP.png 重繪「TCA &gt; 14 小時」標準作業鏈，並把 4 筆 Space-Track close approach notification 整理成同一個事件視圖。</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#flow">查看執行流程 ↓</a>
+          <a class="button" href="#assessments">查看 4 筆評估</a>
+        </div>
+      </div>
+      <div class="orbit-card" aria-label="衛星接近示意圖">
+        <div class="dot a"></div><div class="dot b"></div><div class="sat"></div>
+        <div class="orbit-label"><span>FORMOSAT-8A</span><span>ELECTRON KICK STAGE R/B</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="signal">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">01 / SIGNAL</div><h2>先看事件的量級，再進入判斷鏈。</h2></div>
+          <span class="pill">TCA 同一事件 · 4 次更新評估</span>
+        </div>
+        <div class="grid metrics">
+          <article class="card metric"><div class="label">TCA（UTC）</div><div class="value cyan mono">2026-250T01:28:03</div><div class="sub">UTC+8：2026-09-07 09:28:03</div></article>
+          <article class="card metric"><div class="label">最高 Pc</div><div class="value pink mono">0.001066901</div><div class="sub">約 0.1066901%</div></article>
+          <article class="card metric"><div class="label">最小 miss distance</div><div class="value orange mono">363.0 m</div><div class="sub">四筆更新中的最小值</div></article>
+          <article class="card metric"><div class="label">SOP threshold</div><div class="value green mono">≥ 0.0002</div><div class="sub">原 SOP 圖示的判斷門檻</div></article>
+        </div>
+        <p class="source-note muted">注意：Pc、距離與 TCA 是通知資料的觀測更新，不等同於「已發生碰撞」或自動授權執行 CAM；是否進行 CAM 仍由 OD/PM 依最新資料判斷。</p>
+      </div>
+    </section>
+
+    <section id="flow">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">02 / STANDARD OPERATING PROCEDURE</div><h2>重繪後的執行流程</h2></div>
+          <span class="pill">依 SOP.png · T &gt; 14 Hr</span>
+        </div>
+        <div class="flow-board">
+          <div class="flow" aria-label="T 大於 14 小時衛星碰撞避險流程圖">
+            <div class="flow-col">
+              <div class="node start"><strong>FDF CDM #N</strong><small>收到第 N 筆 CDM</small></div>
+              <div class="arrow">↓</div>
+              <div class="node decision"><strong>FDF</strong><small>Pc ≥ threshold?</small></div>
+              <div class="branch">
+                <div class="node end"><strong>No Action</strong><small>Pc 未達門檻</small></div>
+                <div class="node action"><strong>FDF 通知 OD</strong><small>進入作業判斷</small></div>
+                <div class="branch-label">Yes →</div>
+              </div>
+              <div class="node decision"><strong>TCA &gt; 14 Hr?</strong><small>距離最近接近時間</small></div>
+            </div>
+
+            <div class="flow-col">
+              <div class="arrow"><small>No</small>→</div>
+              <div class="arrow" style="margin-top: 128px"><small>Yes</small>↓</div>
+            </div>
+
+            <div class="flow-col">
+              <div class="node decision"><strong>OD 通知 PM</strong><small>決定是否進行 CAM?</small></div>
+              <div class="branch">
+                <div class="node end"><strong>No Action</strong><small>PM 不進行 CAM</small></div>
+                <div class="node action"><strong>OD Plan CAM</strong><small>建立避險計畫</small></div>
+                <div class="branch-label">Yes →</div>
+              </div>
+              <div class="node action"><strong>OD 通知相關單位</strong><small>系工 / FDF / MA / RCS / OCS / IPS</small></div>
+            </div>
+
+            <div class="flow-col">
+              <div class="arrow"><small>Yes</small>→</div>
+              <div class="arrow" style="margin-top: 128px">↓</div>
+            </div>
+
+            <div class="flow-col">
+              <div class="node action"><strong>TCA − 14 hr</strong><small>FDF 開始產生 report</small></div>
+              <div class="arrow">↓</div>
+              <div class="node action"><strong>MA</strong><small>產生 Delta-V Burn Load</small></div>
+              <div class="arrow">↓</div>
+              <div class="node decision"><strong>TCA − 12 hr</strong><small>Check Pc ≥ threshold?</small></div>
+              <div class="branch">
+                <div class="node end"><strong>Abort CAM</strong><small>No</small></div>
+                <div class="node action"><strong>OD/SA</strong><small>Upload MSI · Payload OFF · Delta-V Burn Load</small></div>
+                <div class="branch-label">Yes →</div>
+              </div>
+              <div class="node action"><strong>TCA − 5 hr CAM</strong><small>Payload ON → TCA</small></div>
+            </div>
+          </div>
+          <div class="legend"><span>判斷節點</span><span class="decision">分流／決策</span><span class="warn">動作／資料準備</span><span class="stop">停止或取消</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="timeline">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">03 / TIME GATES</div><h2>把流程壓到時間軸上</h2></div>
+          <span class="pill">所有時間點相對於同一 TCA</span>
+        </div>
+        <div class="card timeline">
+          <div class="time-row"><div class="time-dot"></div><div class="time-label">CDM #N</div><div class="time-content"><strong>FDF 收到 CDM，先檢查 Pc 是否達到 0.0002 門檻。</strong><span>未達門檻：No Action；達門檻：通知 OD。</span></div></div>
+          <div class="time-row"><div class="time-dot"></div><div class="time-label">TCA − 14h</div><div class="time-content"><strong>FDF 開始產生 report；MA 產生 Delta-V Burn Load。</strong><span>若 TCA 尚未超過 14 小時，先完成 OD/PM 的 CAM 決策。</span></div></div>
+          <div class="time-row"><div class="time-dot"></div><div class="time-label">TCA − 12h</div><div class="time-content"><strong>再次檢查 Pc；若仍達門檻，OD/SA 上傳 MSI。</strong><span>同時 Payload OFF，帶入 Delta-V Burn Load；若未達門檻則 Abort CAM。</span></div></div>
+          <div class="time-row"><div class="time-dot"></div><div class="time-label">TCA − 5h</div><div class="time-content"><strong>執行 CAM 段落：Payload ON，持續至 TCA。</strong><span>流程圖將這裡標為最後的時序執行區。</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="assessments">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">04 / NOTIFICATION UPDATES</div><h2>4 筆通知，整理成同一張事件卡</h2></div>
+          <span class="pill">FORMOSAT-8A × ELECTRON KICK STAGE R/B</span>
+        </div>
+        <div class="grid assessments">
+          <article class="card assessment"><div class="assessment-head"><div><h3>更新 01 · 最小距離</h3><div class="muted">2025-276A / NORAD 66666 × 2024-172G / NORAD 61226</div></div><div class="pc">0.1066901%</div></div><table class="data-table"><tr><th>Overall miss distance</th><td>363.0 m</td></tr><tr><th>Radial / In-Track / Cross-track</th><td>13.9 / 342.1 / −121.5 m</td></tr></table><div class="cdm">CDM 000066666_conj_000061226_2026250012803_247115815117952</div></article>
+          <article class="card assessment"><div class="assessment-head"><div><h3>更新 02</h3><div class="muted">同一 TCA · 第二筆評估</div></div><div class="pc">0.0869075%</div></div><table class="data-table"><tr><th>Overall miss distance</th><td>491.0 m</td></tr><tr><th>Radial / In-Track / Cross-track</th><td>19.6 / 462.4 / −165.5 m</td></tr></table><div class="cdm">CDM 000066666_conj_000061226_2026250012803_247214826122479</div></article>
+          <article class="card assessment"><div class="assessment-head"><div><h3>更新 03</h3><div class="muted">同一 TCA · 第三筆評估</div></div><div class="pc">0.1037637%</div></div><table class="data-table"><tr><th>Overall miss distance</th><td>719.0 m</td></tr><tr><th>Radial / In-Track / Cross-track</th><td>13.3 / 677.0 / −241.9 m</td></tr></table><div class="cdm">CDM 000066666_conj_000061226_2026250012803_248042616116946</div></article>
+          <article class="card assessment"><div class="assessment-head"><div><h3>更新 04 · 最新距離</h3><div class="muted">同一 TCA · 第四筆評估</div></div><div class="pc">0.0768738%</div></div><table class="data-table"><tr><th>Overall miss distance</th><td>968.0 m</td></tr><tr><th>Radial / In-Track / Cross-track</th><td>5.9 / 911.1 / −327.1 m</td></tr></table><div class="cdm">CDM 000066666_conj_000061226_2026250012803_248115600113517</div></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="actions">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">05 / OPERATOR CHECKLIST</div><h2>通知收到後，先做這四件事</h2></div>
+          <span class="pill">原通知中的可執行事項</span>
+        </div>
+        <div class="grid actions">
+          <article class="card action-card"><div class="action-no">01</div><div><h3>回信確認收件</h3><p class="muted">Reply to the notification email，確認 close approach notification 已收到。</p></div></article>
+          <article class="card action-card"><div class="action-no">02</div><div><h3>取得完整 CDM</h3><p class="muted">登入 <a href="https://www.space-track.org/" target="_blank" rel="noreferrer">Space-Track</a> 查詢 covariance 與完整 Conjunction Data Message。</p></div></article>
+          <article class="card action-card"><div class="action-no">03</div><div><h3>需要時提交 ephemeris</h3><p class="muted">依 Spaceflight Safety Handbook 的格式與命名規範上傳，要求另一輪 conjunction screening。</p></div></article>
+          <article class="card action-card"><div class="action-no">04</div><div><h3>無法上傳就聯絡 19 SDS</h3><p class="muted">Email：<a href="mailto:19SDS.orbital.safety@spaceforce.mil">19SDS.orbital.safety@spaceforce.mil</a>；電話：+1-540-284-3999 / +1-540-653-0018。</p></div></article>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <details><summary>帳號與文件連結</summary><p class="muted">沒有 Space-Track 帳號時，可至 <a href="https://www.space-track.org/auth/createAccount" target="_blank" rel="noreferrer">帳號申請頁</a>；操作格式可參考 <a href="https://www.space-track.org/documents/JSpOC_Spaceflight_Safety_Handbook_For_Operators.pdf" target="_blank" rel="noreferrer">Spaceflight Safety Handbook for Operators</a>。</p></details>
+          <details style="margin-top:16px"><summary>原通知的服務聲明</summary><p class="muted">通知最後包含美國政府 SSA 服務的 no-warranty 與 immunity 聲明；本頁為流程與資料整理，不取代原始通知、CDM 或任務操作規範。</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap"><div class="eyebrow">SOURCE &amp; SCOPE</div><p>依據：<span class="mono">SOP.png</span>（T &gt; 14 Hr 衛星碰撞避險標準作業程序）與 <span class="mono">FORMOSAT-8A Close Approach Notification.txt</span>。本頁保留原始數值與決策門檻，將重複的法律與說明文字收斂到可展開區塊。</p><p>產出形式：單一 HTML、無外部套件依賴，可直接用瀏覽器開啟。</p><a href="#top">↑ 回到頁首</a></div>
+  </footer>
+</body>
+</html>
