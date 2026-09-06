@@ -95,6 +95,7 @@
     .node.decision { border-color: rgba(240,76,189,.72); border-radius: 50%; min-height: 88px; padding: 8px 20px; background: radial-gradient(circle, rgba(240,76,189,.16), var(--panel-2)); }
     .node.action { border-color: rgba(255,179,78,.62); }
     .node.end { border-color: rgba(255,107,121,.62); }
+    .node.verify { border-color: rgba(96,224,162,.65); }
     .arrow { display: grid; place-items: center; color: var(--cyan); font-size: 1.6rem; }
     .arrow small { color: var(--muted); font-size: .68rem; text-align: center; line-height: 1.2; }
     .branch { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center; }
@@ -263,6 +264,8 @@
                 <div class="branch-label">Yes →</div>
               </div>
               <div class="node action"><strong>TCA − 5 hr CAM</strong><small>Payload ON → TCA</small></div>
+              <div class="arrow">↓</div>
+              <div class="node verify"><strong>TCA 後</strong><small>OC update TLE to ground station</small></div>
             </div>
           </div>
           <div class="legend"><span>判斷節點</span><span class="decision">分流／決策</span><span class="warn">動作／資料準備</span><span class="stop">停止或取消</span></div>
@@ -279,8 +282,8 @@
         <div class="card timeline">
           <div class="time-row"><div class="time-dot"></div><div class="time-label">CDM #N</div><div class="time-content"><strong>FDF 收到 CDM，先檢查 Pc 是否達到 0.0002 門檻。</strong><span>未達門檻：No Action；達門檻：通知 OD。</span></div></div>
           <div class="time-row"><div class="time-dot"></div><div class="time-label">TCA − 14h</div><div class="time-content"><strong>FDF 開始產生 report；MA 產生 Delta-V Burn Load。</strong><span>若 TCA 尚未超過 14 小時，先完成 OD/PM 的 CAM 決策。</span></div></div>
-          <div class="time-row"><div class="time-dot"></div><div class="time-label">TCA − 12h</div><div class="time-content"><strong>再次檢查 Pc；若仍達門檻，OD/SA 上傳 MSI。</strong><span>同時 Payload OFF，帶入 Delta-V Burn Load；若未達門檻則 Abort CAM。</span></div></div>
-          <div class="time-row"><div class="time-dot"></div><div class="time-label">TCA − 5h</div><div class="time-content"><strong>執行 CAM 段落：Payload ON，持續至 TCA。</strong><span>流程圖將這裡標為最後的時序執行區。</span></div></div>
+          <div class="time-row"><div class="time-dot"></div><div class="time-label">TCA − 12h</div><div class="time-content"><strong>再次檢查 Pc；若仍達門檻，RCS/OD Review：SA Upload · Delta-V Burn Load。</strong><span>若未達門檻則 Abort CAM。</span></div></div>
+          <div class="time-row"><div class="time-dot"></div><div class="time-label">TCA − 5h</div><div class="time-content"><strong>執行 CAM 段落：Payload ON，持續至 TCA。</strong><span>TCA 後接續由 OC update TLE to ground station。</span></div></div>
         </div>
       </div>
     </section>
