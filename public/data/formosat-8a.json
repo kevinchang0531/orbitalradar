@@ -3,10 +3,10 @@
   "noradId": "66666",
   "epoch": "2026-11-19T17:53:23.588160",
   "inclinationDeg": 97.6528,
-  "eccentricity": 0.0008783,
+  "eccentricity": 0.00087831,
   "meanMotionRevPerDay": 15.00907413,
   "periodMinutes": 95.94,
   "source": "CelesTrak GP Data",
   "sourceUrl": "https://celestrak.org/NORAD/elements/gp.php?CATNR=66666&FORMAT=JSON",
-  "refreshedAt": "2026-11-20T01:45:53.274Z"
+  "refreshedAt": "2026-11-20T09:58:59.904Z"
 }
